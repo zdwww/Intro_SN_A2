@@ -1,0 +1,207 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb,amsmath,amsfonts,booktabs,eurosym,geometry,ulem,graphicx,caption,color,setspace,sectsty,comment,footmisc,caption,natbib,pdflscape,subfigure,array,bbm}
+\usepackage{optidef}
+\usepackage[colorlinks=true,linkcolor=red,linkcolor={black},citecolor={blue}]{hyperref}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{bbm}
+\usepackage{multirow}
+\usepackage[backend=bibtex, sorting=none]{biblatex}
+\addbibresource{reference.bib}
+\usepackage{float}
+
+\usepackage[capposition=top]{floatrow}
+\usetikzlibrary{arrows}
+\title{Introduction to Social Networks: Assignment 1}
+\author{Shu Wang\thanks{Student ID: 21-951-371 } \and Tianyang Xu\thanks{Student ID: 21-955-935} \and Songlin Wang\thanks{Student ID: 21-739-545} \and Daiwei Zhang \thanks{Student ID: 21-946-512}} 
+\date{26th March 2023}
+
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+
+
+\geometry{left=1.0in,right=1.0in,top=1.0in,bottom=1.0in}
+\begin{document}
+
+\maketitle
+
+%----------------------
+\section*{Task 1: Describe and plot a social network}
+
+\subsection*{(a)} We have loaded the \texttt{affective} network and gender data into our R file enclosed, with comments necessary.
+
+\subsection*{(b)} We re-coded the \texttt{affective} network as a friendship network by first replacing all the NA values and all the values not equal to $+2$ in the adjacency matrix of \texttt{affective} network by 0, and finally replacing all +2 values by $1$ to get our adjacency matrix for \texttt{friendship} network. In this final adjacency matrix, $1$ represents directed friendship ties and $0$ represents non-existence of directed friendship ties between two nodes.
+
+\subsection*{(c)}
+\begin{enumerate}
+\item 
+\begin{enumerate}
+\item network size $N = \mathbf{27}$
+\item density: $D = \frac{\sum x_{ij}}{N(N-1)} 
+= \frac{N_{\text{edges}}}{N(N-1)} = \mathbf{0.1880342}$,
+where $N_\text{edges} = 132$
+\item average degree: $\frac{\sum x_{ij}}{N} =\frac{N_\text{edges}}{N_\text{nodes}}= \frac{132}{27} = \mathbf{4.888889}$
+\item reciprocity ratio: 
+$\frac{N_{\text{mutual dyads}}}{N_{\text{mutual dyads}} + N_{\text{asymmetric dyads}}} = \mathbf{0.3608247}$, which implies less than half of the dyads, i.e. friendship, are mutual; most friendship ties are one-way. 
+\item gender composition: male 11 female 16
+\item count of same gender ties: $\mathbf{108}$, out of 134 ties; more than 80$\%$ ties are between students of the same gender.
+\end{enumerate}
+\item 
+Measure of our choice: the indegree and outdegree distributions are plotted separately in Figure \ref{fig:indegree} and Figure \ref{fig:outdegree}. Our observed difference between the two distribution (specifically the outdegree values are more evenly distributed) is confirmed by the Pearson correlation coefficient $= \mathbf{0.136}$
+\item
+Interpretation of our measure: Indegree is the number of friendship ties that points inwards at the nodes, indicating how "popular" a student can be within the class; outdegree is the number of ties that origin at the nodes and points towards other nodes, representing a student's willingness to recognize other students as his/her friends. Though the sum of indegree and outdegree for the network should be equal, the outdegree is more evenly distributed than the indegree. This indicates that even though students' willingness to recognize fellow students as friends spreads differently, the distribution of popularity of students is more centralized around the mean($6$ in our network). Another important observation is that popularity of a student is unlikely to exceed a certain number($8$), meanwhile a student might nominate more fellow students as his/her friend.
+\end{enumerate}
+\begin{figure}
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/indegree.png}
+  \captionof{figure}{}
+  \label{fig:indegree}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/outdegree.png}
+  \captionof{figure}{}
+  \label{fig:outdegree}
+\end{minipage}
+\end{figure}
+
+\subsection*{(d)}
+We put the plot as below. The color of the nodes is according to geneder(red for female, blue for male as specified in the legend). We chose in-degree centrality as our centrality measure, since its value directly implies a student's popularity in our social network, i.e. the larger the node, the more 'popular' that student is in the class. To make the plot more informative (node non-overlap, edge non-crossing, symmetry, and uniform edge length), we adopted Kamada \& Kawai layout and tried with different random seeds. We also modified the visual of edges by adjusting transparency, setting arrow heads and end caps of directed edges. With \texttt{geom\_edge\_link} used, the edges with deeper color and double arrows will be the mutual dyads. The title and legend are added for clarity.
+
+\begin{center}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{Figures/friend.png}
+    \caption{}
+    \label{fig:friend}
+\end{figure}
+\end{center}
+
+\subsection*{(e)}
+To illustrate friendship and trust networks in a single graph, we first created a new adjacency matrix with 1s representing friendship ties only, 2s for trust ties, and 3s for ties that exist in both friendship and trust networks. Then we used the \texttt{scale\_edge\_xxx\_manual} functions to distinguish these three types of ties by alpha, color and width. We let darker color, larger width and lower transparency to indicate the overlap between trust and friendship. \texttt{geom\_edge\_fan} is used instead of \texttt{geom\_edge\_link} for better illustration of mutual and asymmetric dyads. The node size is still proportional to in-degree centrality in the friendship network.
+\begin{center}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{Figures/friend&trust.png}
+    \caption{}
+    \label{fig:friend&trust}
+\end{figure}
+\end{center}
+
+\subsection*{(f)}
+There are $\mathbf{34}$ overlaps between two networks according to our R script enclosed, indicating $34$ ties between two people are present in both networks.
+
+\subsection*{(g)}
+Figure \ref{fig:friend} shows that the two gender groups are not separately clustered in the friendship network since there exists many edges bridging the two groups; while the females are more densely connected within the group than the males. With indegree as our centrality measure, we observe females have a higher average indegree than males (5.31 versus 4.27 specifically). However, the highly connected nodes in the friendship network, e.g. the two females with high indegree value of 10 and 8, aren't necessarily trusted by relatively more students. \\
+Out of 38 ties in the trust network, 34 ties (darkblue edges in Figure \ref{fig:friend&trust}) overlap with the friendship network, which has in total of 132 ties; and there isn't any overlap tie, i.e. both friendship and trust, existing between any male and female. This suggests that student’s willing to share important secrets (trust) mostly imply treating someone as a friend, but not vice versa: most students trust none or only one of their friends.
+The overlap part of the friendship and trust network also has a higher reciprocity ratio (0.545) than the friendship network (0.360), which implies students' relations can be more likely to be mutual if there's both friendship and trust involved. Furthermore, as shown in the upper left side of Figure \ref{fig:friend&trust}, we can observe a group of four females with mutual friendship and trust (dyads) among all of them; where such group with more than two people doesn't exist in males as all dyads in the overlap part are separated. 
+ 
+
+\pagebreak
+
+%————————————————————————————————————————————————————————————————————
+\section*{Task 2: Data collection strategies}
+\subsection*{(a)}
+    \par We summarize the advantages/disadvantages of the three approaches to collecting network data as follows.
+    \\ The advantages of the three approaches includes:
+    \begin{itemize}
+        \item complete network data
+            \begin{itemize}
+                \item Provides a global view of the entire network, including all nodes and edges.
+                \item Keeps as much as the details of real world, thus it could enable more social network analyses like centrality, clustering, relationships between nodes and network structure.
+                \item Allows for the identification of subgroups or communities within the network.
+            \end{itemize}
+        \item snowball-sampled network data
+            \begin{itemize}
+                \item Could be a more efficient way to collect network data while dealing with researches in which we only want to focus on specific subgroups or communities, which are quite small parts within the whole population or sample set.
+                \item The cost of getting data in this way is lower than getting complete network data (because the collectors do not need to collect or detail information anymore).
+            \end{itemize}
+        \item ego-centered network
+            \begin{itemize}
+                \item Could be a more manageable and cost-effective way to collect network data, especially for large networks.
+                \item Allows for a more focused analysis of the network surrounding a specific node.
+                \item Could be used to explore the characteristics of the nodes and relationships that are most relevant to a particular research question.
+            \end{itemize}
+    \end{itemize}
+    
+ The disadvantage of the three approaches includes:
+    
+    \begin{itemize}
+        \item complete network data
+            \begin{itemize}
+                \item The cost to get or maintain such a detailed network is huge and sometimes even affordable. The more complex network means a higher cost/more time-consuming to get it.
+                \item The participants may not fully trust the collector which makes the collection hard to implement.
+                \item Could lead to information overload, making it difficult to identify the most important relationships and interactions within the network.
+            \end{itemize}
+        \item snowball-sampled network data
+            \begin{itemize}
+                \item May not provide a complete/totally accurate picture of the network, as some nodes or edges might be missed (intentionally or unintentionally). Thus, the quality of data might be a bit lower than complete network data.
+                \item May not be representative of the larger population or context in which the network exists.
+            \end{itemize}
+        \item ego-centered network
+            \begin{itemize}
+                \item May not provide a complete picture of the larger network because it focuses on a single node and its immediate connections.
+                \item Can be biased towards the experiences of the ego node.
+                \item May not be representative of the larger population or context in which the network exists. 
+            \end{itemize}
+    \end{itemize}
+    
+    \par According to the discussion above, we summarize the three methods as the table below:
+        \begin{table}[ht]
+        \centering
+        \caption{Comparison of network data collection methods}
+        \label{tab:network-data}
+        \begin{tabular}{|l|p{4.5cm}|p{4.5cm}|p{4.5cm}|}
+        \hline
+        Method & Advantages & Disadvantages \\
+        \hline
+        Complete Network Data &  Provides a comprehensive understanding of the network structure & Time-consuming and expensive to collect data on all nodes and edges \\
+        \hline
+        Snowball-Sampled Network Data  & Identifies hard-to-reach nodes and edges & May miss important nodes and edges that are not identified through snowball sampling \\
+        \hline
+        Ego-Centered Network Data & Provides information on the immediate social environment surrounding an individual & May not capture the broader network structure or relationships between other nodes in the network \\
+        \hline
+        \end{tabular}
+        \end{table}  
+        
+\subsection*{(b)}
+    \par One of the common  ethical challenges the three approaches all face is privacy and confidentiality issues. Collecting network data may reveal sensitive information about individuals and their social relationships. Therefore, all three data collection methods may bring a risk of privacy leaks to the individuals, which will further aggravate their mistrust. To solve this, researchers should ensure that informed consent procedures are in place: researchers should obtain informed consent from all participants, clearly explaining the purpose of the study, how participant data will be collected, stored, and protected, and how privacy and confidentiality will be maintained. In addition, use appropriate measures to protect privacy such as data encryption, secure servers, and access controls to protect participant data. We can also de-identify data before analysis and reporting to minimize the risk of identification.
+    
+    \\ The unique ethical challenges that may face respectively and according to solutions are as follows:
+    
+    \begin{itemize}
+        \item Complete Network Data
+            \begin{itemize}
+                \item One of the unique challenges is that informed consent can be particularly challenging in the case of complete network data, as individuals may not always be aware of the extent of their social network or may not want to disclose it due to concerns about privacy.
+                \item The possible solution could be that researchers clearly outline in the informed consent process how participant data will be collected, stored, and protected. To address challenges related to informed consent, researchers should ensure that participants are fully informed about the purpose of the study and how their data will be used, as well as provide clear options for participation and withdrawal.
+            \end{itemize}
+        \item Snowball-Sampled Network Data 
+            \begin{itemize}
+                \item One of the unique challenges is that the identification of hidden or stigmatized social networks may lead to unintended consequences, such as exposure to legal or social repercussions.
+                \item The possible solution could be that researchers clearly outline the inclusion criteria for participants and ensure that recruitment efforts are as representative as possible. Researchers can take steps to minimize the risk of harm to participants, such as obtaining ethical approval from relevant authorities and taking measures to protect the privacy and confidentiality of participants.
+            \end{itemize}
+        \item Ego-Centered Network Data
+            \begin{itemize}
+                \item One of the unique challenges is that Ego-centered network data may reveal information about the social connections and behaviors of others who have not given their consent to participate in the study.
+                \item The possible solution could be that researchers clearly explain the purpose of the study and the extent of data collection to participants, and provide options for participation and withdrawal. Researchers can use measures such as aggregating data and using de-identification techniques to protect the privacy of non-participants and seek legal or ethical approval for the use of the data.
+                
+            \end{itemize}
+    \end{itemize}
+
+\subsection*{(c)}
+\par Here is one research question that could be addressed and one research question that could not be addressed with complete network data:
+    \begin{itemize}
+        \item research that could be addressed
+        
+            In this research, we want to investigate the correlation of people's daily emails, or daily calls, with their social relationships and their professions. Doing this research with complete network data means we could be able to get access to the data of the entire population we are focusing on (nodes in the network), with their connections with others via email or phone calls (edges in the network). Then, we could be able to implement some analyses based on this kind of data, for example, calculate centrality to find some patterns or structures of the network as well as the "importance" of people in the network, analyse the network positions of people like structural hole, social capital etc. With these analyses, we could generate the power and well-being etc. of these people in the network and compare with their profession to learn some potential correlations. For example, some professions usually play a role of structural holes etc. However, with other kinds of data, like snowball-sampled network data, it would be really hard for us to get the data of entire population we want to focus on. For example, when we reach a person (node) in the position of a structural hole through this data collection strategy in the research, and who, unfortunately, doesn't use emails or phone calls to contact with some of other colleagues, a part of the population might be directly ignored. Thus, complete network data could do a better job here.
+            \\
+        \item research that could not be addressed
+        
+            In this research, we want to investigate the social network of people with AIDS in order to find the spread patterns of it. In most of the countries, less than 1\% of the population are AIDS patients, which means we just want to focus on a specific small group of people. It will cost us too much time and money to get data from the entire population of a country or even the world, within which only a little is useful, if we want to collect the complete network data. This could be a waste of resources. In this case, using snowball-sampled network data could be better as all the AIDS patients must have some kinds of relationships with other AIDS patients. With this method, we could be able to get enough data through investigating several patients and then move on to other patients that somehow connect with them, and so on and so forth.
+    \end{itemize}
+    
+\printbibliography
+\end{document}
